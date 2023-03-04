@@ -1,18 +1,22 @@
 package hellojpa.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-
-public class Member {
+public class Member extends BaseEntity{
 
     @Id@GeneratedValue
     @Column(name = "member_id")
     private Long id;
     private String name;
+
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     public Long getId() {
         return id;
