@@ -1,6 +1,9 @@
 package hellojpa;
 
 import hellojpa.domain.Member;
+import hellojpa.domain.Team;
+import hellojpa.domain.cascade.Child;
+import hellojpa.domain.cascade.Parent;
 import hellojpa.domain.item.Item;
 import hellojpa.domain.item.Movie;
 
@@ -18,36 +21,68 @@ public class JpaMain {
         EntityTransaction tx=em.getTransaction();
         tx.begin();
         try{
-            Member member = new Member();
-            member.setName("user1");
-            member.setCreateBy("kim");
-            member.setCreateDate(LocalDateTime.now());
+
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(child1);
+            em.persist(child2);
+            em.persist(parent);
 
 
 
 /*
-            Movie movie = new Movie();
-            movie.setDirector("aaaa");
-            movie.setActor("bbbb");
-            movie.setName("바람과 함께 사라지다");
-            movie.setPrice(10000);
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
 
-            em.persist(movie);
+            Team team2 = new Team();
+            team2.setName("teamB");
+            em.persist(team2);
+
+
+
+            Member member = new Member();
+            member.setName("user1");
+            member.setTeam(team);
+
+            em.persist(member);
+
+            Member member2 = new Member();
+            member2.setName("user1");
+            member2.setTeam(team2);
+
+
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            Movie findMovie = em.find(Movie.class, movie.getId());
-            System.out.println("findMovie = " + findMovie);
+            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class).getResultList();
 
-            Item item = em.find(Item.class, movie.getId());
-            System.out.println("item = " +item);
+            for (Member member1 : members) {
+                System.out.println("member1.getName() = " + member1.getName());
+
+            }
+*/
+
+
+/*
+            Member findMember = em.getReference(Member.class, member.getId());
+            System.out.println("findMember.getClass() = " + findMember.getClass());
+
+            System.out.println("isLoaded =" +emf.getPersistenceUnitUtil().isLoaded(findMember));
 */
 
 
 
             tx.commit();
         }catch (Exception e){
+            e.printStackTrace();
             tx.rollback();
         }finally {
             em.close();
@@ -56,109 +91,4 @@ public class JpaMain {
 
     }
 
-    public static void test1(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx=null;
-        try{
-            tx = em.getTransaction();
-            tx.begin();
-
-            //전체조회
-            List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
-
-            // 페이징
-            List<Member> pageMembers = em.createQuery("select m from Member m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(5)
-                    .getResultList();
-
-            tx.commit();
-        }catch (Exception e){
-            tx.rollback();
-        }finally {
-            em.close();
-        }
-        emf.close();
-    }
-
-    public static void test2(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx=null;
-        try{
-            tx = em.getTransaction();
-            tx.begin();
-
-            Member member = new Member();
-            member.setName("HelloJPA");
-
-            System.out.println("===Before===");
-            em.persist(member);
-            System.out.println("===after===");
-
-            Member findMember = em.find(Member.class, member.getId());
-
-
-
-            tx.commit();
-        }catch (Exception e){
-            tx.rollback();
-        }finally {
-            em.close();
-        }
-        emf.close();
-    }
-
-    public static void test3(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx=null;
-        try{
-            tx = em.getTransaction();
-            tx.begin();
-
-            Member findMember1 = em.find(Member.class, 1L);
-            Member findMember2 = em.find(Member.class, 1L);
-
-            System.out.println("findMember1==findMember2 ? "+(findMember1==findMember2));
-
-            tx.commit();
-        }catch (Exception e){
-            tx.rollback();
-        }finally {
-            em.close();
-        }
-        emf.close();
-    }
-
-
-    public static void test4(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx=null;
-        try{
-            tx = em.getTransaction();
-            tx.begin();
-
-            Member member1 = new Member();
-            member1.setName("memberA");
-
-            Member member2 = new Member();
-            member2.setName("memberB");
-
-            em.persist(member1);
-            em.persist(member2);
-
-            Member findMember = em.find(Member.class, member1.getId());
-            findMember.setName("memberChange");
-
-            tx.commit();
-        }catch (Exception e){
-            tx.rollback();
-        }finally {
-            em.close();
-        }
-        emf.close();
-    }
 }

@@ -9,14 +9,17 @@ public class Member extends BaseEntity{
     @Column(name = "member_id")
     private Long id;
     private String name;
+/*
 
     @OneToOne
     @JoinColumn(name = "locker_id")
     private Locker locker;
+*/
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
 
     public Long getId() {
         return id;
@@ -31,6 +34,15 @@ public class Member extends BaseEntity{
     }
 
     public void setName(String name) {
+
         this.name = name;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

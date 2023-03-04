@@ -1,17 +1,29 @@
-package hellojpa.domain.item;
+package hellojpa.domain.cascade;
 
 import javax.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type1")
-public abstract class Item {
+public class Child {
+
     @Id
     @GeneratedValue
+    @Column(name = "child_id")
     private Long id;
 
     private String name;
-    private int price;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "child_id")
+    private Parent parent;
+
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
+    }
 
     public Long getId() {
         return id;
@@ -28,13 +40,4 @@ public abstract class Item {
     public void setName(String name) {
         this.name = name;
     }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 }
-
