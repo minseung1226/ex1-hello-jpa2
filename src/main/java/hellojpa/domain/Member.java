@@ -21,20 +21,36 @@ public class Member{
     @Embedded
     private Address homeAddress;
 
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<Address> addressHistory) {
+        this.addressHistory = addressHistory;
+    }
+
     @ElementCollection
     @CollectionTable(name = "FAVORITE_FOOD",
             joinColumns = @JoinColumn(name = "member_id"))
     @Column(name = "FOOD_NAME")
     private Set<String> favoriteFoods=new HashSet<>();
 
-    /*@ElementCollection
+    @ElementCollection
     @CollectionTable(name = "ADDRESS",
             joinColumns = @JoinColumn(name = "member_id"))
-    private List<Address> addressHistory=new ArrayList<>();*/
+    private List<Address> addressHistory=new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    /*@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "address_id")
-    private List<AddressEntity> addressHistory=new ArrayList<>();
+    private List<AddressEntity> addressHistory=new ArrayList<>();*/
     public Address getHomeAddress() {
         return homeAddress;
     }
