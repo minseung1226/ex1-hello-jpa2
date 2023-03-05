@@ -17,6 +17,13 @@ public class Parent {
     @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
     private List<Child> children=new ArrayList<>();
 
+    public List<Child> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Child> children) {
+        this.children = children;
+    }
 
     public void addChild(Child child){
         children.add(child);

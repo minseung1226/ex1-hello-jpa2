@@ -13,7 +13,7 @@ public class Child {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "parent_id")
     private Parent parent;
 
 
